@@ -71,6 +71,8 @@ int main(void)
 			if(keys[RIGHT])
 				myPlayer.MoveRight();
 
+			myPlayer.handle_bounds(WIDTH, HEIGHT);
+
 			for(int i=0;i<NUM_ArrowS;i++)
 				Arrows[i].UpdateArrow(WIDTH);
 			for(int i=0;i<NUM_ghostS;i++)

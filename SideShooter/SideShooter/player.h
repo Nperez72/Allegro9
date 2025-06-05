@@ -15,6 +15,8 @@ public:
 	int getX(){return x;}
 	int getY(){return y;}
 	void removeLife(){lives--;}
+	// Handle collision at the bounds of the screen
+	void handle_bounds(int screen_w, int screen_h);
 private:
 	int x;
 	int y;
