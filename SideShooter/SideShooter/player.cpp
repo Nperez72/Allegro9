@@ -7,6 +7,8 @@
 player::~player()
 {
 	al_destroy_bitmap(image);
+	// Clean up sprite array
+	delete[] life_sprites;
 }
 player::player(int HEIGHT)
 {
@@ -30,11 +32,13 @@ void player::MoveUp()
 	if(y < 0)
 		y = 0;
 }
+// Move down will now properly handle collison at the bottom of the screen
 void player::MoveDown(int HEIGHT)
 {
+	int ph = al_get_bitmap_height(image);
 	y += speed;
-	if(y > HEIGHT)
-		y = HEIGHT;
+	if(y > HEIGHT - ph)
+		y = HEIGHT - ph;
 }
 void player::MoveLeft()
 {
@@ -47,26 +51,4 @@ void player::MoveRight()
 	x += speed;
 	if(x > 300)
 		x = 300;
-}
-// Use screen dimensions to determine when player hits the edges of the screen
-// Reset position if true
-void player::handle_bounds(int screen_w, int screen_h) {
-    int pw = al_get_bitmap_width(image);
-    int ph = al_get_bitmap_height(image);
-    bool flipped = false;
-
-    if (x < 0) {
-        x = 0;
-    }
-    if (x > screen_w - pw) {
-        x = screen_w - pw;
-    }
-    if (y < 0) {
-        y = 0;
-    }
-    if (y > screen_h - ph) {
-        y = screen_h - ph;
-
-    }
-
 }

@@ -15,8 +15,6 @@ public:
 	int getX(){return x;}
 	int getY(){return y;}
 	void removeLife(){lives--;}
-	// Handle collision at the bounds of the screen
-	void handle_bounds(int screen_w, int screen_h);
 private:
 	int x;
 	int y;
@@ -26,5 +24,6 @@ private:
 	int boundy;
 	int score;
 	ALLEGRO_BITMAP *image;
+	ALLEGRO_BITMAP* life_sprites[4];
 };
 #endif
