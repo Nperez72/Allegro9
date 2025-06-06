@@ -1,9 +1,12 @@
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_primitives.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_font.h>
+#include <allegro5\allegro_ttf.h>
 #include "player.h"
 #include "ghost.h"
 #include "Arrow.h"
+
 
 int main(void)
 {
@@ -38,6 +41,13 @@ int main(void)
 
 	al_install_keyboard();
 	al_init_image_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
+
+	// For showing score at end of game
+	ALLEGRO_FONT* font = al_load_ttf_font("16020_FUTURAM.ttf", 32, 0);
+	// For showing lives at bottom of screen
+	ALLEGRO_FONT* lives = al_load_ttf_font("16020_FUTURAM.ttf", 22, 0);
 
 	//object variables
 	player myPlayer(HEIGHT);
@@ -80,8 +90,13 @@ int main(void)
 				ghosts[i].Updateghost();
 			for(int i=0;i<NUM_ArrowS;i++)
 				Arrows[i].CollideArrow(ghosts, NUM_ghostS);
-			for(int i=0;i<NUM_ghostS;i++)
+			for (int i = 0;i < NUM_ghostS;i++) {
 				ghosts[i].Collideghost(myPlayer);
+				if (myPlayer.isGameOver()) {
+					done = true;
+					break;
+				}
+			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 		{
@@ -142,6 +157,8 @@ int main(void)
 		{
 			redraw = false; 
 
+			al_draw_textf(lives, al_map_rgb(255, 255, 255), 700, 350, ALLEGRO_ALIGN_RIGHT, "Lives: %d", myPlayer.getLives());
+
 			myPlayer.DrawPlayer();
 			for(int i=0;i<NUM_ArrowS;i++)
 				Arrows[i].DrawArrow();
@@ -152,6 +169,24 @@ int main(void)
 			al_clear_to_color(al_map_rgb(0,0,0));
 		}
 	}
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_flip_display();
+
+	bool showStats = true;
+	double start_time = al_get_time();
+
+	// Show score after game loop is terminated
+	while (showStats) {
+		al_draw_textf(font, al_map_rgb(255, 255, 255), 400, 200, ALLEGRO_ALIGN_CENTER, "Enemies shot: %d", Arrow::getScore());
+		al_flip_display();
+
+		// Check if 5 seconds have passed, if true, close screen
+		if (al_get_time() - start_time >= 5.0) {
+			showStats = false;
+		}
+	}
+
+
 
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);

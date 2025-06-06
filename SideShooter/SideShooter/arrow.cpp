@@ -3,6 +3,8 @@
 #include <allegro5\allegro_image.h>
 #include "Arrow.h"
 
+int Arrow::score = 0;
+
 Arrow::Arrow()
 {
 	speed = 10;
@@ -53,6 +55,7 @@ void Arrow::CollideArrow(ghost ghosts[], int cSize)
 				{
 					live = false;
 					ghosts[j].setLive(false);
+					score ++;
 				}
 			}
 		}

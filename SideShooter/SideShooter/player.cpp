@@ -12,7 +12,6 @@ player::~player()
 }
 player::player(int HEIGHT)
 {
-
 	image = al_load_bitmap("Kirby.png");
 	x = 20;
 	y = HEIGHT / 2;
@@ -51,4 +50,14 @@ void player::MoveRight()
 	x += speed;
 	if(x > 300)
 		x = 300;
+}
+// Update sprite image and gameOver condition
+void player::removeLife() {
+	lives--;
+	loseCounter++;
+	if (loseCounter >= 4) {
+		gameOver = true;
+		return;
+	}
+	image = life_sprites[loseCounter];
 }
